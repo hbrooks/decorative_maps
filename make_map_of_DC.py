@@ -1,9 +1,12 @@
 """
+Uses the Google Maps Static Map API to get map images of several longitude and latitudes
+centered around the US Capital Building in Washington, DC.
+
 Usage:
     make_map_of_DC.py API_KEY [--save]
 
 Options:
-    --save
+    --save: Saves images from the Google Maps API with names like 0.png, 1.png, ...
 """
 import time
 from docopt import docopt
@@ -25,8 +28,8 @@ def params_to_URLs(params_list):
 
 def assemble_params(API_KEY):
     params_list = []
-    CHANGE_IN_LAT = 0.001
-    CHANGE_IN_LONG = 0.001
+    CHANGE_IN_LAT = 0.002
+    CHANGE_IN_LONG = 0.002
     WIDTH = 2
     HEIGHT = 2
     for lat_index in range(0, WIDTH):
@@ -50,6 +53,7 @@ def make_request(URL):
         if request.status_code == 200:
             return request
         else:
+            print('Request failed, sleeping...')
             time.sleep(current_delay)
             current_delay *= 2
     raise Exception('Issue connecting to Google Maps API.') # TODO: Choose another exception class.
